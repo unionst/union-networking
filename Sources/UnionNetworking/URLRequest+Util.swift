@@ -6,10 +6,19 @@
 //
 
 import Foundation
+import UnionKeychain
 
-extension URLRequest {
-    mutating func addToken(_ token: String) async throws {
-        setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+public extension URLRequest {
+    mutating func addToken(_ token: String?) {
+        if let token {
+            setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        }
+    }
+
+    mutating func addToken() {
+        if let token = Keychain.bearerToken {
+            addToken(token)
+        }
     }
 
     mutating func setJSON() {
@@ -21,16 +30,15 @@ extension URLRequest {
     }
 
     @discardableResult
-    func execute(token: String) async throws -> Data {
+    func execute() async throws -> Data {
         var request = self
-        try await request.addToken(token)
         let (data, response) = try await URLSession.shared.data(for: request)
         try response.check(data: data)
         return data
     }
 
-    func get<T: Decodable>(token: String) async throws -> T {
-        let data = try await execute(token: token)
+    func get<T: Decodable>() async throws -> T {
+        let data = try await execute()
 
         let decoder = JSONDecoder()
         let dateFormatter = DateFormatter()

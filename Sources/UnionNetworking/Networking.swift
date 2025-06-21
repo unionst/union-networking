@@ -8,12 +8,17 @@
 import Foundation
 
 public actor Networking {
-    public static var baseURL: URL?
+    public static let baseURL: URL = {
+        guard
+            let urlString = Bundle.main.object(forInfoDictionaryKey: "NetworkingBaseURL") as? String,
+            let url = URL(string: urlString)
+        else {
+            fatalError("⚠️ NetworkingBaseURL not set in Info.plist")
+        }
+        return url
+    }()
 
     public static func url(_ path: String) -> URL {
-        guard let baseURL else {
-            fatalError("Can't create network URL without setting baseURL.")
-        }
         return baseURL.appending(path: path)
     }
 

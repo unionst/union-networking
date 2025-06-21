@@ -8,7 +8,7 @@
 import Foundation
 
 extension URLResponse {
-    func check(data: Data) throws {
+    public func check(data: Data) throws {
         guard let httpResponse = self as? HTTPURLResponse else {
             throw DisplayError.notHTTP
         }

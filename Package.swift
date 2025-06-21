@@ -5,8 +5,8 @@ import PackageDescription
 let package = Package(
     name: "union-networking",
     platforms: [
-        .macOS(.v13),
-        .iOS(.v16)
+        .macOS(.v14),
+        .iOS(.v17)
     ],
     products: [
         .library(
@@ -14,9 +14,16 @@ let package = Package(
             targets: ["UnionNetworking"]
         ),
     ],
+    dependencies: [
+        .package(path: "../union-keychain"),
+    ],
     targets: [
         .target(
-            name: "UnionNetworking"
+            name: "UnionNetworking",
+            dependencies: [
+                .product(name: "UnionKeychain", package: "union-keychain")
+            ]
         ),
     ]
 )
+
