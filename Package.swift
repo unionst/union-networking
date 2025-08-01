@@ -15,7 +15,7 @@ let package = Package(
         ),
     ],
     dependencies: [
-        .package(path: "../union-keychain"),
+        .package(url: "https://github.com/unionst/union-keychain.git", from: "1.0.0"),
     ],
     targets: [
         .target(
