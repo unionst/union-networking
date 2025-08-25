@@ -1,0 +1,15 @@
+{
+  "originHash" : "fd47d91ef0e2ca68a96e8ac8ed4a24e5e1c62526163b4c45995df23cd656082e",
+  "pins" : [
+    {
+      "identity" : "union-keychain",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/unionst/union-keychain.git",
+      "state" : {
+        "revision" : "8549007be3e6c09eaf991039ecf3b8031277afd5",
+        "version" : "1.0.0"
+      }
+    }
+  ],
+  "version" : 3
+}
