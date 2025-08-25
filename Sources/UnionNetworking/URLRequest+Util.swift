@@ -31,7 +31,7 @@ public extension URLRequest {
 
     @discardableResult
     func execute() async throws -> Data {
-        var request = self
+        let request = self
         let (data, response) = try await URLSession.shared.data(for: request)
         try response.check(data: data)
         return data

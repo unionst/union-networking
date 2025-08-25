@@ -10,20 +10,13 @@ import Foundation
 extension URLResponse {
     public func check(data: Data) throws {
         guard let httpResponse = self as? HTTPURLResponse else {
-            throw DisplayError.notHTTP
+            throw NetworkError.notHTTPResponse
         }
 
         let statusCode = httpResponse.statusCode
         guard 200..<300 ~= statusCode else {
-            if statusCode == 401 {
-                throw DisplayError.forbidden
-            } else if statusCode == 404 {
-                throw DisplayError.notFound
-            } else if let errorResponse = try? JSONDecoder().decode(ErrorResponse.self, from: data) {
-                throw DisplayError(errorResponse.message)
-            } else {
-                throw DisplayError.notOK(statusCode)
-            }
+            let serverMessage = try? JSONDecoder().decode(ErrorResponse.self, from: data).message
+            throw NetworkError.httpError(statusCode: statusCode, serverMessage: serverMessage, data: data)
         }
     }
 }

@@ -14,8 +14,8 @@ public protocol ErrorDisplayable: AnyObject {
 extension ErrorDisplayable {
     @MainActor
     public func showError(_ error: Error) {
-        if let error = error as? DisplayError {
-            self.error = error.message
+        if let error = error as? NetworkError {
+            self.error = error.errorDescription
         } else if error is CancellationError {
             return
         } else if let decodingError = error as? DecodingError {

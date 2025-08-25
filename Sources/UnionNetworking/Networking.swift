@@ -32,9 +32,13 @@ public actor Networking {
         return URLRequest(url: url)
     }
 
-    public static func request(endpoint: String, params: [String: String]) -> URLRequest {
+    public static func request(endpoint: String, params: [String: String], encode: Bool = true) -> URLRequest {
         var components = components(endpoint)
-        components.queryItems = params.map { URLQueryItem(name: $0.key, value: $0.value) }
+        components.queryItems = params.map {
+            let encoded = encode ? $0.value.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) : $0.value
+            
+            return URLQueryItem(name: $0.key, value: encoded ?? $0.value)
+        }
         if let url = components.url {
             return URLRequest(url: url)
         } else {
