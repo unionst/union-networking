@@ -30,15 +30,21 @@ public extension URLRequest {
     }
 
     @discardableResult
-    func execute() async throws -> Data {
+    func execute(preserveHeadersOnRedirect: Bool = false) async throws -> Data {
+        let session = preserveHeadersOnRedirect ? URLSession(configuration: .default, delegate: RedirectPreservingDelegate(), delegateQueue: nil) : URLSession.shared
+        return try await execute(using: session)
+    }
+
+    @discardableResult
+    private func execute(using session: URLSession) async throws -> Data {
         let request = self
-        let (data, response) = try await URLSession.shared.data(for: request)
+        let (data, response) = try await session.data(for: request)
         try response.check(data: data)
         return data
     }
 
-    func get<T: Decodable>() async throws -> T {
-        let data = try await execute()
+    func get<T: Decodable>(preserveHeadersOnRedirect: Bool = false) async throws -> T {
+        let data = try await execute(preserveHeadersOnRedirect: preserveHeadersOnRedirect)
 
         let decoder = JSONDecoder()
         let dateFormatter = DateFormatter()
